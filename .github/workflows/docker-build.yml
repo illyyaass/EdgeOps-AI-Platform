@@ -1,0 +1,35 @@
+name: Build and Push Docker Image
+
+# هادشي غايخدم غير يلا درتي بوش فـ المين وبدلتي شي حاجة فـ الداشبورد
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'edgeops-monitoring-dashboard/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # كنعطيو الصلاحية للروبو باش يكتب ويحط ليماج فـ الحساب ديالك
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: ./edgeops-monitoring-dashboard
+        push: true
+        tags: ghcr.io/illyyaass/edgeops-dashboard:latest
