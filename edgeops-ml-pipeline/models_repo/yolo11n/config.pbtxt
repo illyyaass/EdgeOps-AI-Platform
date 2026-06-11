@@ -1,0 +1,16 @@
+name: "yolo11n"
+platform: "onnxruntime_onnx"
+max_batch_size: 8
+
+# هادي هي الخاصية السحرية اللي كتجمع الطلبات
+dynamic_batching {
+  max_queue_delay_microseconds: 1000
+}
+
+# شحال من نسخة ديال الموديل بغينا نخدمو فـ الـ GPU
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+  }
+]
